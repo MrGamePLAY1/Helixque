@@ -11,4 +11,5 @@ export async function checkHealth() {
   } catch (error) {
     return { ok: false, redis: "disconnected", error: (error as Error).message };
   }
+}
 
