@@ -23,17 +23,7 @@ const userManager = new UserManager();
 // Set the io instance for UserManager after creation
 userManager.setIo(io);
 
-// Health endpoint
-app.get("/healthz", async (_req, res) => {
-  try {
-    // const online = await countOnline().catch(() => -1);
-    // res.json({ ok: true, online });
-    res.json({ ok: true, online: -1 }); // fallback without Redis
-  } catch {
-    res.json({ ok: true, online: -1 });
-  }
-});
-
+// Health point
 app.get("/health", async (_req, res) => {
   const health = await checkHealth();
   if (!health.ok) {
