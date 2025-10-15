@@ -23,21 +23,17 @@ const userManager = new UserManager();
 // Set the io instance for UserManager after creation
 userManager.setIo(io);
 
-// Health point
+
 app.get("/health", async (_req, res) => {
   const health = await checkHealth();
-  if (!health.ok) {
-    res.status(503).json(health);
-    return;
-  }
-  res.json(health);
+  res.status(health.status).json(health);
 });
 
 const HEARTBEAT_MS = Number(process.env.SOCKET_HEARTBEAT_MS || 30_000);
 const heartbeats = new Map<string, NodeJS.Timeout>();
 
 io.on("connection", (socket: Socket) => {
-  // console.log(`[io] connected ${socket.id}`);
+  console.log(`[io] connected ${socket.id}`);
 
   // Derive meta
   const meta = {
@@ -158,7 +154,7 @@ io.on("connection", (socket: Socket) => {
   });
 
   socket.on("disconnect", (reason) => {
-    // console.log(`[io] disconnected ${socket.id} (${reason})`);
+    console.log(`[io] disconnected ${socket.id} (${reason})`);
 
     const hbRef = heartbeats.get(socket.id);
     if (hbRef) {
@@ -205,14 +201,4 @@ const PORT = Number(process.env.PORT || 5001);
 server.listen(PORT, () => console.log(`listening on *:${PORT}`));
 
 const shutdown = (signal: string) => {
-  console.log(`Received ${signal}. Shutting down gracefully...`);
-  server.close(() => {
-    console.log("HTTP server closed.");
-    // cleanup: clear all heartbeats
-    heartbeats.forEach((hb) => clearInterval(hb));
-    process.exit(0);
-  });
-};
-
-process.on("SIGINT", () => shutdown("SIGINT"));
-process.on("SIGTERM", () => shutdown("SIGTERM"));
+  console.log(`Received ${signal}. Shutting down gracefully...`);Z
