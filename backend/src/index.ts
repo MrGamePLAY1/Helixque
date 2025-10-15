@@ -23,24 +23,10 @@ const userManager = new UserManager();
 // Set the io instance for UserManager after creation
 userManager.setIo(io);
 
-// Health endpoint
-app.get("/healthz", async (_req, res) => {
-  try {
-    // const online = await countOnline().catch(() => -1);
-    // res.json({ ok: true, online });
-    res.json({ ok: true, online: -1 }); // fallback without Redis
-  } catch {
-    res.json({ ok: true, online: -1 });
-  }
-});
 
 app.get("/health", async (_req, res) => {
   const health = await checkHealth();
-  if (!health.ok) {
-    res.status(503).json(health);
-    return;
-  }
-  res.json(health);
+  res.status(health.status).json(health);
 });
 
 const HEARTBEAT_MS = Number(process.env.SOCKET_HEARTBEAT_MS || 30_000);
