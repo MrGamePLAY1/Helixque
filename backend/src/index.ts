@@ -201,4 +201,4 @@ const PORT = Number(process.env.PORT || 5001);
 server.listen(PORT, () => console.log(`listening on *:${PORT}`));
 
 const shutdown = (signal: string) => {
-  console.log(`Received ${signal}. Shutting down gracefully...`);Z
+  console.log(`Received ${signal}. Shutting down gracefully...`);
